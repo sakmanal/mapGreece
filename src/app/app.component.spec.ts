@@ -1,4 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
@@ -18,14 +19,8 @@ describe('AppComponent', () => {
 
   it(`should have as title 'greecemap'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('greecemap');
+    const map = fixture.debugElement.query(By.css('div'));
+    expect(map).toBeTruthy();
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('greecemap app is running!');
-  });
 });
