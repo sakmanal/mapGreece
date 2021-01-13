@@ -14,14 +14,18 @@ export class AppComponent {
     layers: [
       L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 10,
+        minZoom: 6,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      })
+      }),
     ],
     zoom: 6,
     center: L.latLng(37.9, 23.7)
   };
 
   onMapReady(map: L.Map): void {
+
+    const bounds = L.latLngBounds([[30, 15], [45, 40]]);
+    map.setMaxBounds(bounds);
 
     const info = new L.Control();
 
@@ -42,10 +46,11 @@ export class AppComponent {
       const layer = e.target;
 
       layer.setStyle({
-        weight: 2,
-        color: '#666',
+        weight: 3,
+        color: '#616DE2',
         dashArray: '',
-        fillOpacity: 0.7
+        fillOpacity: 0.7,
+        // fillColor: '#666'
       });
 
       if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
@@ -73,14 +78,26 @@ export class AppComponent {
       });
     };
 
+    // get color depending on population density value
+    const getColor = (d: number) => {
+      return d > 1000000 ? '#800026' :
+        d > 500000 ? '#BD0026' :
+          d > 200000 ? '#E31A1C' :
+            d > 150000 ? '#FC4E2A' :
+              d > 100000 ? '#FD8D3C' :
+                d > 90000 ? '#FEB24C' :
+                  d > 50000 ? '#FED976' :
+                    '#FFEDA0';
+    };
+
     const style = feature => {
       return {
         weight: 2,
         opacity: 1,
-        // color: '#666',
+        color: '#666',
         // dashArray: '3',
-        // fillOpacity: 0.7,
-        // fillColor: getColor(feature.properties.density)
+        fillOpacity: 0.5,
+        fillColor: getColor(feature.properties.population)
       };
     };
 
@@ -91,24 +108,13 @@ export class AppComponent {
 
     map.attributionControl.addAttribution('<img width="10" src="https://simpleicons.org/icons/github.svg" alt="code"/><a href="https://github.com/sakmanal"> Github</a>');
 
-    // get color depending on population density value
-    const getColor = (d: number) => {
-      return d > 1000 ? '#800026' :
-        d > 500 ? '#BD0026' :
-          d > 200 ? '#E31A1C' :
-            d > 100 ? '#FC4E2A' :
-              d > 50 ? '#FD8D3C' :
-                d > 20 ? '#FEB24C' :
-                  d > 10 ? '#FED976' :
-                    '#FFEDA0';
-      };
 
     const legend = new L.Control({ position: 'bottomright' });
 
     legend.onAdd = () => {
 
       const div = L.DomUtil.create('div', 'info legend');
-      const grades = [0, 10, 20, 50, 100, 200, 500, 1000];
+      const grades = [0, 50000, 90000, 100000, 150000, 200000, 500000, 1000000];
       const labels = [];
 
       for (let i = 0; i < grades.length; i++) {
