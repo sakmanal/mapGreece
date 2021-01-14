@@ -12,10 +12,10 @@ export class AppComponent {
   states = states;
   options = {
     layers: [
-      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 10,
         minZoom: 6,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }),
     ],
     zoom: 6,
@@ -70,7 +70,7 @@ export class AppComponent {
     };
 
     const onEachFeature = (feature: Feature<Geometry, any>, layer: L.Layer) => {
-      layer.bindPopup(feature.properties.name_el);
+      layer.bindPopup('<b>' + feature.properties.name_el + '</b><br />' + feature.properties.population + ' people');
       layer.on({
         mouseover: highlightFeature,
         mouseout: resetHighlight,
