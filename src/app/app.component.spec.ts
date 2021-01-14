@@ -17,7 +17,7 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'greecemap'`, () => {
+  it(`should show the map`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const map = fixture.debugElement.query(By.css('div'));
     expect(map).toBeTruthy();

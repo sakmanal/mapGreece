@@ -4,7 +4,7 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:14-browsers
-      
+
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -13,6 +13,7 @@ jobs:
 
     steps:
       - checkout
+      - setup_remote_docker
 
       # Download and cache dependencies
       - restore_cache:
@@ -27,7 +28,18 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-        
-      # run tests!
-      - run: yarn ng build --prod
+
+      # Bulid and run tests!
+      - run: yarn ng build --prod --build-optimizer --no-progress
       - run: yarn ng test --watch=false --no-progress
+
+      # Build and push docker image to Azure Container Registry
+      - run:
+          command: |
+            docker build -t greecemap.azurecr.io/initial:1.0 .
+      - run:
+          command: |
+            docker login --username $DOCKER_USER --password $DOCKER_PASS greecemap.azurecr.io
+      - run:
+          command: |
+            docker push greecemap.azurecr.io/initial:1.0
