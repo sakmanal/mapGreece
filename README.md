@@ -1,6 +1,5 @@
 # Interactive Choropleth Map of Greece
 
-# Example:
 [![CircleCI](https://circleci.com/gh/sakmanal/mapGreece.svg?style=svg)](https://circleci.com/gh/sakmanal/mapGreece)
 
 - A case study of creating a colorful interactive choropleth map of Greek Administrative Regions Population build with Angular and Leaflet.
